@@ -72,7 +72,7 @@ def styles_to_css(styles):
 
 # Function to create an annotated line with colored and styled words
 def create_annotated_line(line, matches, color, styles):
-    annotated_line = [" " for _ in line]  # Initialize with spaces
+    annotated_line = ["." for _ in line]  # Initialize with spaces
 
     for start, matched_text, word in matches:
         for i, char in enumerate(matched_text):
