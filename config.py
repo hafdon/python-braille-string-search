@@ -20,8 +20,6 @@
 #     }
 # ]
 
-MAX_IDENTIFIER_WIDTH = 30
-
 # Define the list of strings to search for
 array_of_lists = [
     {
