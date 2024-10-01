@@ -29,8 +29,8 @@
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/yourusername/text-annotator.git
-   cd text-annotator
+   git clone https://github.com/hafdon/python-braille-string-search.git
+   cd python-braille-string-search
    ```
 
 2. **Create a Virtual Environment (Optional but Recommended):**
@@ -52,7 +52,7 @@
 
 2. **Configure the Search Lists:**
 
-   Open the `annotate.py` script and modify the `array_of_lists` variable to define your search strings, matching rules, and colors.
+   Open the `config.py` script and modify the `array_of_lists` variable to define your search strings, matching rules, and colors.
 
 3. **Run the Script:**
 

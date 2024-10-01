@@ -110,7 +110,16 @@ array_of_lists = [
         ],
     },
     {
-        "match_type": "full_word",
+        ###
+        # SHORTFORMS used in braille.
+        #
+        # - With a few exceptions, shortforms can be used as both whole words and parts of longer words.
+        # - Most shotforms can only be used within a longer word if the longer word is:
+        #   - standing alone
+        #   - appears on a definitive list of permitted words
+        # - Do not use shortforms as partsof words if their use would violate a basic contraction rule.
+        ###
+        "match_type": "substring",
         "color": "black",
         "strings": [
             "about",
