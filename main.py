@@ -23,7 +23,19 @@ def compile_patterns(array_of_lists):
                 # Default to substring match if unspecified
                 pattern = re.compile(re.escape(word), re.IGNORECASE)
             patterns.append((word, pattern))
-        compiled.append({"patterns": patterns, "color": lst["color"]})
+
+        # Retrieve the 'style' key if it exists, else default to an empty list
+        styles = lst.get("style", [])
+        if isinstance(styles, str):
+            styles = [styles]  # Convert to list if a single string is provided
+
+        compiled.append(
+            {
+                "patterns": patterns,
+                "color": lst["color"],
+                "styles": styles,  # Add styles to the compiled list
+            }
+        )
     return compiled
 
 
@@ -40,8 +52,22 @@ def find_matches(line, compiled_list):
     return matches
 
 
-# Function to create an annotated line with colored words
-def create_annotated_line(line, matches, color):
+# Helper function to convert style keywords to CSS properties
+def styles_to_css(styles):
+    css_styles = []
+    for style in styles:
+        if style.lower() == "bold":
+            css_styles.append("font-weight: bold;")
+        elif style.lower() == "italics":
+            css_styles.append("font-style: italic;")
+        elif style.lower() == "strikethrough":
+            css_styles.append("text-decoration: line-through;")
+        # Add more styles here if needed
+    return " ".join(css_styles)
+
+
+# Function to create an annotated line with colored and styled words
+def create_annotated_line(line, matches, color, styles):
     annotated_line = [" " for _ in line]  # Initialize with spaces
     spans = []  # To store span information
 
@@ -50,7 +76,7 @@ def create_annotated_line(line, matches, color):
             if start + i < len(annotated_line):
                 annotated_line[start + i] = matched_text[i]
 
-    # Now, build the HTML annotated line with colored spans
+    # Now, build the HTML annotated line with colored and styled spans
     annotated_html = ""
     i = 0
     while i < len(line):
@@ -65,8 +91,10 @@ def create_annotated_line(line, matches, color):
             word = "".join(word_chars)
             # Escape HTML characters
             word_escaped = html.escape(word)
-            # Wrap the word in a colored span
-            annotated_html += f'<span style="color:{color};">{word_escaped}</span>'
+            # Build the style string
+            style_string = f"color:{color}; {styles_to_css(styles)}"
+            # Wrap the word in a styled span
+            annotated_html += f'<span style="{style_string}">{word_escaped}</span>'
         else:
             # Preserve spaces using non-breaking spaces for HTML
             annotated_html += " "
@@ -127,7 +155,10 @@ def main():
                     matches = find_matches(line, compiled_list)
                     if matches:
                         annotated_html = create_annotated_line(
-                            line, matches, compiled_list["color"]
+                            line,
+                            matches,
+                            compiled_list["color"],
+                            compiled_list.get("styles", []),
                         )
                         outfile.write(f"<div>{annotated_html}</div>\n")
 
