@@ -55,7 +55,7 @@ array_of_lists = [
    Execute the Python script:
 
    ```bash
-   python annotate.py
+   python main.py
    ```
 
    This will generate `output.html` with the annotated content.
