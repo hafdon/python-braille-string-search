@@ -122,6 +122,12 @@ def main():
         }
         .original {
             color: black;
+            margin-bottom: 4px; /* Reduced space below original line */
+        }
+        .annotated {
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            line-height: 0; /* Adjust line height as needed */
         }
     </style>
 </head>
@@ -160,7 +166,10 @@ def main():
                             compiled_list["color"],
                             compiled_list.get("styles", []),
                         )
-                        outfile.write(f"<div>{annotated_html}</div>\n")
+                        # Add the 'annotated' class to the div
+                        outfile.write(
+                            f'<div class="annotated">{annotated_html}</div>\n'
+                        )
 
                 # Optional: Add a blank line for readability between original lines
                 # outfile.write('<div>&nbsp;</div>\n')
