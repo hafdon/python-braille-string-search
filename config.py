@@ -20,6 +20,8 @@
 #     }
 # ]
 
+MAX_IDENTIFIER_WIDTH = 30
+
 # Define the list of strings to search for
 array_of_lists = [
     {
@@ -27,6 +29,7 @@ array_of_lists = [
         # Single-letter
         # Has to be full word
         ###
+        "line_identifier": "Full words only",
         "match_type": "full_word",
         "color": "pink",
         "strings": [
@@ -69,6 +72,7 @@ array_of_lists = [
     },
     {
         # 5+
+        "line_identifier": "[5+]",
         "match_type": "substring",
         "color": "green",
         "strings": [
@@ -98,12 +102,14 @@ array_of_lists = [
     },
     {
         # 45+
+        "line_identifier": "[45+]",
         "match_type": "substring",
         "color": "green",
         "strings": ["upon", "word", "those", "whose", "these"],
     },
     {
         # 456+
+        "line_identifier": "[456+]",
         "match_type": "substring",
         "color": "green",
         "strings": [

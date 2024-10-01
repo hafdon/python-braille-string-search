@@ -29,11 +29,15 @@ def compile_patterns(array_of_lists):
         if isinstance(styles, str):
             styles = [styles]  # Convert to list if a single string is provided
 
+        # Retrieve the 'line_identifier' key if it exists, else default to an empty string
+        line_identifier = lst.get("line_identifier", "")
+
         compiled.append(
             {
                 "patterns": patterns,
                 "color": lst["color"],
                 "styles": styles,  # Add styles to the compiled list
+                "line_identifier": line_identifier,  # Add line_identifier to the compiled list
             }
         )
     return compiled
@@ -69,7 +73,6 @@ def styles_to_css(styles):
 # Function to create an annotated line with colored and styled words
 def create_annotated_line(line, matches, color, styles):
     annotated_line = [" " for _ in line]  # Initialize with spaces
-    spans = []  # To store span information
 
     for start, matched_text, word in matches:
         for i, char in enumerate(matched_text):
@@ -109,31 +112,50 @@ def main():
 
     compiled_lists = compile_patterns(array_of_lists)
 
-    # HTML Header and Styles
-    html_header = """<!DOCTYPE html>
+    # Determine the maximum identifier length for consistent width
+    max_identifier_length = max(
+        (len(lst["line_identifier"]) for lst in compiled_lists), default=0
+    )
+    # Estimate width based on character count (assuming monospace font)
+    identifier_width = max(
+        150, max_identifier_length * 10
+    )  # Adjust multiplier as needed
+
+    # HTML Header and Styles using CSS Grid
+    html_header = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Annotated Text Output</title>
     <style>
-        body {
+        body {{
             font-family: monospace;
             white-space: pre;
-        }
-        .original {
+        }}
+        .original, .annotated {{
+            display: grid; /* Use CSS Grid for layout */
+            grid-template-columns: 150px 1fr; /* Fixed width for identifier, flexible for content */
+            align-items: flex-start; /* Align items at the start vertically */
+            margin-bottom: 5px; /* Optional: Space between lines */
+        }}
+        .identifier {{
+            text-align: right; /* Right-align the text within the identifier */
+            font-weight: bold;
+            padding-right: 10px; /* Space between identifier and content */
+            white-space: nowrap; /* Prevent the identifier text from wrapping */
+        }}
+        .original-content {{
             color: black;
-            margin-bottom: 4px; /* Reduced space below original line */
-        }
-        .annotated {
+        }}
+        .annotated-content {{
             margin: 0; /* Remove default margin */
             padding: 0; /* Remove default padding */
-            line-height: 0; /* Adjust line height as needed */
-        }
+            line-height: 1; /* Adjust line height as needed */
+        }}
     </style>
 </head>
 <body>
 """
-
     html_footer = """
 </body>
 </html>
@@ -153,8 +175,11 @@ def main():
                 # Escape HTML special characters
                 line_escaped = html.escape(line)
 
-                # Write the original line
-                outfile.write(f'<div class="original">{line_escaped}</div>\n')
+                # Write the original line with an empty identifier
+                outfile.write(
+                    f'<div class="original"><span class="identifier"></span>'
+                    f'<span class="original-content">{line_escaped}</span></div>\n'
+                )
 
                 # For each configured list, find matches and write annotated line
                 for compiled_list in compiled_lists:
@@ -166,9 +191,15 @@ def main():
                             compiled_list["color"],
                             compiled_list.get("styles", []),
                         )
-                        # Add the 'annotated' class to the div
+                        # Prepare the identifier for this list
+                        identifier = compiled_list["line_identifier"]
+                        identifier_html = (
+                            f'<span class="identifier">{html.escape(identifier)}</span>'
+                        )
+                        # Write the annotated line with its identifier
                         outfile.write(
-                            f'<div class="annotated">{annotated_html}</div>\n'
+                            f'<div class="annotated">{identifier_html}'
+                            f'<span class="annotated-content">{annotated_html}</span></div>\n'
                         )
 
                 # Optional: Add a blank line for readability between original lines
