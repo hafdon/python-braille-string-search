@@ -1,7 +1,7 @@
 import re
 import html
 
-from config import array_of_lists
+from config import HTML_FOOTER, HTML_HEADER, SEPARATOR, array_of_lists
 
 
 # Function to compile regex patterns based on match_type
@@ -72,7 +72,7 @@ def styles_to_css(styles):
 
 # Function to create an annotated line with colored and styled words
 def create_annotated_line(line, matches, color, styles):
-    annotated_line = ["." for _ in line]  # Initialize with spaces
+    annotated_line = [SEPARATOR for _ in line]  # Initialize with spaces
 
     for start, matched_text, word in matches:
         for i, char in enumerate(matched_text):
@@ -121,53 +121,13 @@ def main():
         150, max_identifier_length * 10
     )  # Adjust multiplier as needed
 
-    # HTML Header and Styles using CSS Grid
-    html_header = f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Annotated Text Output</title>
-    <style>
-        body {{
-            font-family: monospace;
-            white-space: pre;
-        }}
-        .original, .annotated {{
-            display: grid; /* Use CSS Grid for layout */
-            grid-template-columns: 150px 1fr; /* Fixed width for identifier, flexible for content */
-            align-items: flex-start; /* Align items at the start vertically */
-            margin-bottom: 5px; /* Optional: Space between lines */
-        }}
-        .identifier {{
-            text-align: right; /* Right-align the text within the identifier */
-            font-weight: bold;
-            padding-right: 10px; /* Space between identifier and content */
-            white-space: nowrap; /* Prevent the identifier text from wrapping */
-        }}
-        .original-content {{
-            color: black;
-        }}
-        .annotated-content {{
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
-            line-height: 1; /* Adjust line height as needed */
-        }}
-    </style>
-</head>
-<body>
-"""
-    html_footer = """
-</body>
-</html>
-"""
-
     try:
         with open(input_file, "r", encoding="utf-8") as infile, open(
             output_file, "w", encoding="utf-8"
         ) as outfile:
 
             # Write the HTML header
-            outfile.write(html_header)
+            outfile.write(HTML_HEADER)
 
             for line_number, line in enumerate(infile, start=1):
                 # Remove trailing newline characters
@@ -206,7 +166,7 @@ def main():
                 # outfile.write('<div>&nbsp;</div>\n')
 
             # Write the HTML footer
-            outfile.write(html_footer)
+            outfile.write(HTML_FOOTER)
 
         print(f"Processing complete. Output written to '{output_file}'.")
 
