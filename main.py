@@ -9,7 +9,6 @@ def compile_patterns(array_of_lists):
     compiled = []
     for lst in array_of_lists:
         patterns = []
-        print(lst)
         for word in lst["strings"]:
             if lst["match_type"] == "full_word":
                 # Match whole words using word boundaries
