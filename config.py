@@ -22,6 +22,7 @@
 
 SEPARATOR = "."
 
+
 # HTML Header and Styles using CSS Grid
 HTML_HEADER = f"""<!DOCTYPE html>
 <html lang="en">
@@ -53,6 +54,52 @@ HTML_HEADER = f"""<!DOCTYPE html>
             padding: 0; /* Remove default padding */
             line-height: .5; /* Adjust line height as needed */
         }}
+/* Tooltip container */
+        
+        .tooltip {{
+  position: relative;
+  display: inline-block;
+}}
+
+/* Tooltip text */
+.tooltip .tooltiptext {{
+  visibility: hidden;
+  width: auto;
+  max-width: 300px; /* Adjust the max-width as needed */
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the text */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+  white-space: normal; /* Allow tooltip text to wrap */
+}}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {{
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}}
+
+/* Show the tooltip text when hovering */
+.tooltip:hover .tooltiptext {{
+  visibility: visible;
+  opacity: 1;
+}}
+
+        
     </style>
 </head>
 <body>
@@ -164,10 +211,10 @@ array_of_lists = [
         "strings": [
             {"word": "cannot", "dots": "14"},
             {"word": "had", "dots": "125"},
-            "many",
-            "spirit",
-            "world",
-            "their",
+            {"word": "many", "dots": "134"},
+            {"word": "spirit", "dots": "234"},
+            {"word": "world", "dots": "2456"},
+            {"word": "their", "dots": "2346"},
         ],
     },
     {
