@@ -1,7 +1,8 @@
 import argparse
 import html
+import os
 
-from config import HTML_FOOTER, HTML_HEADER, array_of_lists
+from config import HTML_FOOTER_FILE, HTML_HEADER_FILE, array_of_lists
 
 from utils.compile_patterns import compile_patterns
 from utils.create_annotated_line import create_annotated_line
@@ -44,7 +45,18 @@ def main():
         150, max_identifier_length * 10
     )  # Adjust multiplier as needed
 
+    # Read the HTML header and footer from external files
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    header_file = os.path.join(script_dir, HTML_HEADER_FILE)
+    footer_file = os.path.join(script_dir, HTML_FOOTER_FILE)
+
     try:
+
+        with open(header_file, "r", encoding="utf-8") as hf:
+            HTML_HEADER = hf.read()
+        with open(footer_file, "r", encoding="utf-8") as ff:
+            HTML_FOOTER = ff.read()
+
         with open(input_file, "r", encoding="utf-8") as infile, open(
             output_file, "w", encoding="utf-8"
         ) as outfile:
@@ -77,9 +89,9 @@ def main():
                         )
                         # Prepare the identifier for this list
                         identifier = compiled_list["line_identifier"]
-                        identifier_html = (
-                            f'<span class="identifier">{html.escape(identifier)}</span>'
-                        )
+                        # identifier_html = (
+                        #     f'<span class="identifier">{html.escape(identifier)}</span>'
+                        # )
                         # Write the annotated line with its identifier
                         outfile.write(
                             f'<div class="annotated"><span class="identifier">{html.escape(identifier)}</span>'
@@ -94,8 +106,8 @@ def main():
 
         print(f"Processing complete. Output written to '{output_file}'.")
 
-    except FileNotFoundError:
-        print(f"Error: The file '{input_file}' does not exist.")
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
     except Exception as e:
         print(f"An error occurred: {e}")
 

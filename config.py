@@ -1,113 +1,8 @@
-# # Define the array of lists with configuration for each list
-# array_of_lists = [
-#     {
-#         "strings": ["error", "fail", "critical"],
-#         "match_type": "full_word",
-#         "color": "red",
-#         "style": ["bold", "strikethrough"]  # Applying multiple styles
-#     },
-#     {
-#         "strings": ["warning", "caution"],
-#         "match_type": "substring",
-#         "color": "orange",
-#         "style": "italics"  # Single style as a string
-#     },
-#     {
-#         "strings": ["info", "note"],
-#         "match_type": "substring",
-#         "color": "blue"
-#         # No style applied
-#     }
-# ]
-
 SEPARATOR = "."
 
-
 # HTML Header and Styles using CSS Grid
-HTML_HEADER = f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Annotated Text Output</title>
-    <style>
-        body {{
-            font-family: monospace;
-            white-space: pre;
-        }}
-        .original, .annotated {{
-            display: grid; /* Use CSS Grid for layout */
-            grid-template-columns: 150px 1fr; /* Fixed width for identifier, flexible for content */
-            align-items: flex-start; /* Align items at the start vertically */
-            margin-bottom: 5px; /* Optional: Space between lines */
-        }}
-        .identifier {{
-            text-align: right; /* Right-align the text within the identifier */
-            font-weight: bold;
-            padding-right: 10px; /* Space between identifier and content */
-            white-space: nowrap; /* Prevent the identifier text from wrapping */
-        }}
-        .original-content {{
-            color: black;
-        }}
-        .annotated-content {{
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
-            line-height: .5; /* Adjust line height as needed */
-        }}
-/* Tooltip container */
-        
-        .tooltip {{
-  position: relative;
-  display: inline-block;
-}}
-
-/* Tooltip text */
-.tooltip .tooltiptext {{
-  visibility: hidden;
-  width: auto;
-  max-width: 300px; /* Adjust the max-width as needed */
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px;
-  position: absolute;
-  z-index: 1;
-  bottom: 125%; /* Position above the text */
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  transition: opacity 0.2s;
-  white-space: normal; /* Allow tooltip text to wrap */
-}}
-
-/* Tooltip arrow */
-.tooltip .tooltiptext::after {{
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 5px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
-}}
-
-/* Show the tooltip text when hovering */
-.tooltip:hover .tooltiptext {{
-  visibility: visible;
-  opacity: 1;
-}}
-
-        
-    </style>
-</head>
-<body>
-"""
-HTML_FOOTER = """
-</body>
-</html>
-"""
+HTML_HEADER_FILE = "header.html"
+HTML_FOOTER_FILE = "footer.html"
 
 # Define the list of strings to search for
 array_of_lists = [
@@ -181,10 +76,10 @@ array_of_lists = [
             "work",
             "young",
             "character",
-            "through",
-            "where",
+            {"word": "through", "dots": "1456"},
+            {"word": "where", "dots": "156"},
             "ought",
-            "there",
+            {"word": "there", "dots": "2346"},
         ],
         "exeptions": [
             {
@@ -251,7 +146,12 @@ array_of_lists = [
         "match_type": "full_word",
         "color": "red",
         "style": "strikethrough",
-        "strings": ["abouts", "almosts", "hims", "hims"],  # ab(ou)ts  # almo(st)s
+        "strings": [
+            {"word": "abouts", "dots": "ab(ou)ts"},
+            {"word": "almosts", "dots": "almo(st)s"},
+            "hims",
+            "hims",
+        ],
     },
     {
         ###
@@ -266,81 +166,81 @@ array_of_lists = [
         "match_type": "substring",
         "color": "red",
         "strings": [
-            "about",
-            "above",
-            "according",
-            "across",
-            "after",
-            "afternoon",
-            "afterward",
-            "again",
-            "against",
-            "almost",
-            "already",
-            "also",
-            "although",
-            "altogether",
-            "always",
-            "because",
-            "before",
-            "behind",
-            "below",
-            "beneath",
-            "beside",
-            "between",
-            "beyond",
-            "blind",
-            "braille",
-            "children",
-            "conceive",
-            "conceiving",
-            "could",
-            "deceive",
-            "deceiving",
-            "declare",
-            "declaring",
-            "either",
-            "first",
-            "friend",
-            "good",
-            "great",
-            "herself",
-            "him",
-            "himself",
-            "immediate",
-            "its",
-            "itself",
-            "letter",
-            "little",
-            "much",
-            "must",
-            "myself",
-            "necessary",
-            "neither",
-            "oneself",
-            "ourselves",
-            "paid",
-            "perceive",
-            "perceiving",
-            "perhaps",
-            "quick",
-            "receive",
-            "receiving",
-            "rejoice",
-            "rejoicing",
-            "said",
-            "should",
-            "such",
-            "themselves",
-            "thyself",
-            "today",
-            "together",
-            "tomorrow",
-            "tonight",
-            "would",
-            "your",
-            "yourself",
-            "yourselves",
+            {"word": "about", "dots": "ab"},
+            {"word": "above", "dots": "abv"},
+            {"word": "according", "dots": "ac"},
+            {"word": "across", "dots": "acr"},
+            {"word": "after", "dots": "af"},
+            {"word": "afternoon", "dots": "afn"},
+            {"word": "afterward", "dots": "afw"},
+            {"word": "again", "dots": "ag"},
+            {"word": "against", "dots": "ag(st)"},
+            {"word": "almost", "dots": "alm"},
+            {"word": "already", "dots": "alr"},
+            {"word": "also", "dots": "al"},
+            {"word": "although", "dots": "al(th)"},
+            {"word": "altogether", "dots": "alt"},
+            {"word": "always", "dots": "alw"},
+            {"word": "because", "dots": "(be)c"},
+            {"word": "before", "dots": "(be)f"},
+            {"word": "behind", "dots": "(be)h"},
+            {"word": "below", "dots": "(be)l"},
+            {"word": "beneath", "dots": "(be)n"},
+            {"word": "beside", "dots": "(be)s"},
+            {"word": "between", "dots": "(be)t"},
+            {"word": "beyond", "dots": "(be)y"},
+            {"word": "blind", "dots": "*bl"},
+            {"word": "braille", "dots": "*brl"},
+            {"word": "children", "dots": "*(ch)n"},
+            {"word": "conceive", "dots": "(con)cv"},
+            {"word": "conceiving", "dots": "(con)cvg"},
+            {"word": "could", "dots": "cd"},
+            {"word": "deceive", "dots": "dcv"},
+            {"word": "deceiving", "dots": "dcvg"},
+            {"word": "declare", "dots": "dcl"},
+            {"word": "declaring", "dots": "dclg"},
+            {"word": "either", "dots": "ei"},
+            {"word": "first", "dots": "*f(st)"},
+            {"word": "friend", "dots": "*fr"},
+            {"word": "good", "dots": "*gd"},
+            {"word": "great", "dots": "*grt"},
+            {"word": "herself", "dots": "h(er)f"},
+            {"word": "him", "dots": "hm"},
+            {"word": "himself", "dots": "hmf"},
+            {"word": "immediate", "dots": "imm"},
+            {"word": "its", "dots": "xs"},
+            {"word": "itself", "dots": "xf"},
+            {"word": "letter", "dots": "*lr"},
+            {"word": "little", "dots": "*ll"},
+            {"word": "much", "dots": "m(ch)"},
+            {"word": "must", "dots": "m(st)"},
+            {"word": "myself", "dots": "myf"},
+            {"word": "necessary", "dots": "nec"},
+            {"word": "neither", "dots": "nei"},
+            {"word": "oneself", "dots": "(one[5o])f"},
+            {"word": "ourselves", "dots": "(ou)rvs"},
+            {"word": "paid", "dots": "pd"},
+            {"word": "perceive", "dots": "p(er)cv"},
+            {"word": "perceiving", "dots": "p(er)cvg"},
+            {"word": "perhaps", "dots": "p(er)h"},
+            {"word": "quick", "dots": "*qk"},
+            {"word": "receive", "dots": "rcv"},
+            {"word": "receiving", "dots": "rcvg"},
+            {"word": "rejoice", "dots": "rjc"},
+            {"word": "rejoicing", "dots": "rjcg"},
+            {"word": "said", "dots": "sd"},
+            {"word": "should", "dots": "(sh[146])d"},
+            {"word": "such", "dots": "s(ch)"},
+            {"word": "themselves", "dots": "(the)mvs"},
+            {"word": "thyself", "dots": "(th)yf"},
+            {"word": "today", "dots": "td"},
+            {"word": "together", "dots": "tgr"},
+            {"word": "tomorrow", "dots": "tm"},
+            {"word": "tonight", "dots": "tn"},
+            {"word": "would", "dots": "wd"},
+            {"word": "your", "dots": "yr"},
+            {"word": "yourself", "dots": "yrf"},
+            {"word": "yourselves", "dots": "yrvs"},
         ],
     },
     {
