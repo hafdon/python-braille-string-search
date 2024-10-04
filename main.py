@@ -2,7 +2,6 @@ import re
 import argparse
 import html
 
-
 from config import HTML_FOOTER, HTML_HEADER, SEPARATOR, array_of_lists
 
 
@@ -20,30 +19,36 @@ def compile_patterns(array_of_lists):
                 dots = None
 
             if lst["match_type"] == "full_word":
+                # Match whole words using word boundaries
                 pattern = re.compile(
                     r"\b" + re.escape(actual_word) + r"\b", re.IGNORECASE
                 )
             elif lst["match_type"] == "substring":
+                # Match any occurrence of the substring
                 pattern = re.compile(re.escape(actual_word), re.IGNORECASE)
             elif lst["match_type"] == "not_beginning":
+                # Match substrings not at the beginning of a word
                 pattern = re.compile(r"(?<!\b)" + re.escape(actual_word), re.IGNORECASE)
             else:
+                # Default to substring match if unspecified
                 pattern = re.compile(re.escape(actual_word), re.IGNORECASE)
 
             patterns.append((actual_word, pattern, dots))
 
+        # Retrieve the 'style' key if it exists, else default to an empty list
         styles = lst.get("style", [])
         if isinstance(styles, str):
-            styles = [styles]
+            styles = [styles]  # Convert to list if a single string is provided
 
+        # Retrieve the 'line_identifier' key if it exists, else default to an empty string
         line_identifier = lst.get("line_identifier", "")
 
         compiled.append(
             {
                 "patterns": patterns,
                 "color": lst["color"],
-                "styles": styles,
-                "line_identifier": line_identifier,
+                "styles": styles,  # Add styles to the compiled list
+                "line_identifier": line_identifier,  # Add line_identifier to the compiled list
             }
         )
     return compiled
@@ -57,6 +62,7 @@ def find_matches(line, compiled_list):
             start = match.start()
             matched_text = match.group(0)
             matches.append((start, matched_text, word, dots))
+    # Sort matches by starting index
     matches.sort(key=lambda x: x[0])
     return matches
 
