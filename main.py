@@ -1,5 +1,7 @@
 import re
+import argparse
 import html
+
 
 from config import HTML_FOOTER, HTML_HEADER, SEPARATOR, array_of_lists
 
@@ -107,8 +109,23 @@ def create_annotated_line(line, matches, color, styles):
 
 # Main function to process the file and generate HTML output
 def main():
-    input_file = "sample.txt"  # Replace with your input file path
-    output_file = "output.html"  # Replace with your desired output file path
+    # Create the parser
+    parser = argparse.ArgumentParser(description="Process input and output file paths.")
+
+    # Add arguments for input and output files
+    parser.add_argument("input_file", type=str, help="Path to the input file.")
+    parser.add_argument("output_file", type=str, help="Path to the output file.")
+
+    # Parse the arguments
+    args = parser.parse_args()
+
+    # Assign the arguments to variables
+    input_file = args.input_file
+    output_file = args.output_file
+
+    # Now you can use input_file and output_file as needed
+    print(f"Input File: {input_file}")
+    print(f"Output File: {output_file}")
 
     compiled_lists = compile_patterns(array_of_lists)
 
