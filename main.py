@@ -11,35 +11,39 @@ def compile_patterns(array_of_lists):
     compiled = []
     for lst in array_of_lists:
         patterns = []
-        for word in lst["strings"]:
-            if lst["match_type"] == "full_word":
-                # Match whole words using word boundaries
-                pattern = re.compile(r"\b" + re.escape(word) + r"\b", re.IGNORECASE)
-            elif lst["match_type"] == "substring":
-                # Match any occurrence of the substring
-                pattern = re.compile(re.escape(word), re.IGNORECASE)
-            elif lst["match_type"] == "not_beginning":
-                # Match substrings not at the beginning of a word
-                pattern = re.compile(r"(?<!\b)" + re.escape(word), re.IGNORECASE)
+        for entry in lst["strings"]:
+            if isinstance(entry, dict):
+                actual_word = entry.get("word")
+                dots = entry.get("dots")
             else:
-                # Default to substring match if unspecified
-                pattern = re.compile(re.escape(word), re.IGNORECASE)
-            patterns.append((word, pattern))
+                actual_word = entry
+                dots = None
 
-        # Retrieve the 'style' key if it exists, else default to an empty list
+            if lst["match_type"] == "full_word":
+                pattern = re.compile(
+                    r"\b" + re.escape(actual_word) + r"\b", re.IGNORECASE
+                )
+            elif lst["match_type"] == "substring":
+                pattern = re.compile(re.escape(actual_word), re.IGNORECASE)
+            elif lst["match_type"] == "not_beginning":
+                pattern = re.compile(r"(?<!\b)" + re.escape(actual_word), re.IGNORECASE)
+            else:
+                pattern = re.compile(re.escape(actual_word), re.IGNORECASE)
+
+            patterns.append((actual_word, pattern, dots))
+
         styles = lst.get("style", [])
         if isinstance(styles, str):
-            styles = [styles]  # Convert to list if a single string is provided
+            styles = [styles]
 
-        # Retrieve the 'line_identifier' key if it exists, else default to an empty string
         line_identifier = lst.get("line_identifier", "")
 
         compiled.append(
             {
                 "patterns": patterns,
                 "color": lst["color"],
-                "styles": styles,  # Add styles to the compiled list
-                "line_identifier": line_identifier,  # Add line_identifier to the compiled list
+                "styles": styles,
+                "line_identifier": line_identifier,
             }
         )
     return compiled
