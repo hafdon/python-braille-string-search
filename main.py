@@ -77,36 +77,40 @@ def styles_to_css(styles):
 
 # Function to create an annotated line with colored and styled words
 def create_annotated_line(line, matches, color, styles):
-    annotated_line = [SEPARATOR for _ in line]  # Initialize with spaces
-
-    for start, matched_text, word in matches:
-        for i, char in enumerate(matched_text):
-            if start + i < len(annotated_line):
-                annotated_line[start + i] = matched_text[i]
-
-    # Now, build the HTML annotated line with colored and styled spans
     annotated_html = ""
-    i = 0
-    while i < len(line):
-        char = annotated_line[i]
-        if char != " ":
-            # Find the full span of the word
-            start = i
-            word_chars = []
-            while i < len(line) and annotated_line[i] != " ":
-                word_chars.append(annotated_line[i])
-                i += 1
-            word = "".join(word_chars)
-            # Escape HTML characters
-            word_escaped = html.escape(word)
-            # Build the style string
-            style_string = f"color:{color}; {styles_to_css(styles)}"
-            # Wrap the word in a styled span
-            annotated_html += f'<span style="{style_string}">{word_escaped}</span>'
+    last_index = 0
+
+    # Sort matches by start position
+    matches = sorted(matches, key=lambda x: x[0])
+
+    for match in matches:
+        start, matched_text, word, dots = match
+        end = start + len(matched_text)
+
+        # Add text before the match
+        if start > last_index:
+            non_matched_text = line[last_index:start]
+            annotated_html += html.escape(non_matched_text)
+
+        # Escape the matched text
+        word_escaped = html.escape(matched_text)
+
+        # Build the style string
+        style_string = f"color:{color}; {styles_to_css(styles)}"
+
+        # If dots is provided, add it as a title attribute for hover effect
+        if dots:
+            annotated_html += f'<span style="{style_string}" title="{html.escape(dots)}">{word_escaped}</span>'
         else:
-            # Preserve spaces using non-breaking spaces for HTML
-            annotated_html += " "
-            i += 1
+            annotated_html += f'<span style="{style_string}">{word_escaped}</span>'
+
+        last_index = end
+
+    # Add any remaining text after the last match
+    if last_index < len(line):
+        remaining_text = line[last_index:]
+        annotated_html += html.escape(remaining_text)
+
     return annotated_html
 
 
