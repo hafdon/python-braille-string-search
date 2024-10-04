@@ -22,6 +22,46 @@
 
 SEPARATOR = "."
 
+# HTML Header and Styles using CSS Grid
+HTML_HEADER = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Annotated Text Output</title>
+    <style>
+        body {{
+            font-family: monospace;
+            white-space: pre;
+        }}
+        .original, .annotated {{
+            display: grid; /* Use CSS Grid for layout */
+            grid-template-columns: 150px 1fr; /* Fixed width for identifier, flexible for content */
+            align-items: flex-start; /* Align items at the start vertically */
+            margin-bottom: 5px; /* Optional: Space between lines */
+        }}
+        .identifier {{
+            text-align: right; /* Right-align the text within the identifier */
+            font-weight: bold;
+            padding-right: 10px; /* Space between identifier and content */
+            white-space: nowrap; /* Prevent the identifier text from wrapping */
+        }}
+        .original-content {{
+            color: black;
+        }}
+        .annotated-content {{
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            line-height: .5; /* Adjust line height as needed */
+        }}
+    </style>
+</head>
+<body>
+"""
+HTML_FOOTER = """
+</body>
+</html>
+"""
+
 # Define the list of strings to search for
 array_of_lists = [
     {
@@ -31,7 +71,7 @@ array_of_lists = [
         ###
         "line_identifier": "Full words only",
         "match_type": "full_word",
-        "color": "pink",
+        "color": "fuchsia",
         "strings": [
             "but",
             "can",
@@ -99,6 +139,15 @@ array_of_lists = [
             "ought",
             "there",
         ],
+        "exeptions": [
+            {
+                "one":
+                # Use the strong and loewr groupsigns in preference to the initial and final letter contractions
+                # except as noted in (5) above (referring to "ence" groupsign) so long as the strong and lower groupsigns do not take up more space
+                # e.g. telephon(ed) [not] teleph(one)d
+                ["poisoned"]
+            }
+        ],
     },
     {
         # 45+
@@ -113,8 +162,8 @@ array_of_lists = [
         "match_type": "substring",
         "color": "green",
         "strings": [
-            "cannot",
-            "had",
+            {"word": "cannot", "dots": "14"},
+            {"word": "had", "dots": "125"},
             "many",
             "spirit",
             "world",
@@ -122,8 +171,9 @@ array_of_lists = [
         ],
     },
     {
-        # 46+ / 56+
+        # 46+
         # Cannot be at the beginning of a word
+        "line_identifier": "[46+]",
         "match_type": "not_beginning",
         "color": "green",
         "strings": [
@@ -132,14 +182,15 @@ array_of_lists = [
             "sion",
             "less",
             "ount",
-            "ence",
-            "ong",
-            "ful",
-            "tion",
-            "ness",
-            "ment",
-            "ity",
         ],
+    },
+    {
+        # 56+
+        # Cannot be at the beginning of a word
+        "match_type": "not_beginning",
+        "line_identifier": "[56+]",
+        "color": "green",
+        "strings": ["ong", "ful", "tion", "ness", "ment", "ity", "ence"],
     },
     {
         "match_type": "substring",
